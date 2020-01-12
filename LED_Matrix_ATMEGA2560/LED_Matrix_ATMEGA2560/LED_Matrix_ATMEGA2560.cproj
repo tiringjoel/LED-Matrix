@@ -124,6 +124,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="max7219ptr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="max7219ptr.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="lcd_keypad_m2560.c">
       <SubType>compile</SubType>
     </None>
