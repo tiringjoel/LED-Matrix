@@ -30,10 +30,23 @@
 #define OUTPUT		   (1)
 #define digitalWrite(port, bitnr, val) {if (val) PORT(port) |= 1<<bitnr; else PORT(port) &= ~(1<<bitnr);}
 #define pinMode(port, bitnr, val) {if (val) DDR(port) |= 1<<bitnr; else DDR(port) &= ~(1<<bitnr);}
+#define _DELAY			//_delay_ms(0.05)
 // macros for Intensity
 #define LOW				0x2
 #define MEDIUM			0x7
 #define HIGH			0xE
+
+#define ROWLENGTH	(8)
+#define COLLENGTH	(8)
+
+bool testbuffer[8][8] = {	{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false},
+							{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false},
+							{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false},
+							{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false}	};
 
 static void shiftByte(uint8_t byte, uint8_t lsbfirst)
 {
@@ -50,34 +63,32 @@ static void shiftByte(uint8_t byte, uint8_t lsbfirst)
 		}
 		digitalWrite(MAXPORT,DATAPIN,command);
 		digitalWrite(MAXPORT,CLKPIN,TRUE);
-		_delay_us(0.05);
+		_DELAY;
 		digitalWrite(MAXPORT,CLKPIN,FALSE);
-		_delay_us(0.05);
+		_DELAY;
 	}
 }
 
 static void shiftPointerArray(bool **output, uint8_t lsbfirst)
 {
-	volatile uint8_t command = FALSE;
 	for (uint8_t i=0; i<8; i++)
 	{
 		if (!lsbfirst)
 		{
-			command = *(*(output + i));
+			digitalWrite(MAXPORT,DATAPIN,*(*(output + i)));
 			}else {
-			command = *(*(output + BYTE-i));
+			digitalWrite(MAXPORT,DATAPIN,*(*(output + BYTE-i)));
 		}
-		digitalWrite(MAXPORT,DATAPIN,command);
 		digitalWrite(MAXPORT,CLKPIN,TRUE);
-		//_delay_us(0.05);
+		_DELAY;
 		digitalWrite(MAXPORT,CLKPIN,FALSE);
-		//_delay_us(0.05);
+		_DELAY;
 	}
 }
 
 static void latchData(void){
 	digitalWrite(MAXPORT,CSPIN,TRUE);
-	//_delay_us(0.05);
+	_DELAY;
 	digitalWrite(MAXPORT,CSPIN,FALSE);
 }
 
@@ -88,9 +99,36 @@ static void writeRegisterbyReference(uint8_t address,bool **value)
 	latchData();
 }
 
-void max7219ptrtest(void){
-	bool mybuffer[] = {1,1,1,1,0,0,0,0};
-	bool mybuffer2[] = {1,0,1,0,1,0,1,0,1};
+static void writeDatabyReference(uint8_t address ,bool **value, uint8_t NrBytes)
+{
+	for (uint8_t i=0; i<NrBytes; i++)
+	{
+		shiftByte(address, MSBFIRST);
+		shiftPointerArray((value+8*i),LSBFIRST);
+	}
+	latchData();
+}
+
+void writeBufferbyReference(bool buf[ROWLENGTH][COLLENGTH])
+{
+	//assign Array of Pointer to Bufferrows
+	bool *Bufferadr[ROWLENGTH];
+	for (uint8_t i=0; i<ROWLENGTH; i++)
+	{
+		Bufferadr[i] = &buf[i][0]; 
+	}
+	//write Data iteratively to Register
+	for (uint8_t i=0; i<COLLENGTH; i++)
+	{
+		writeDatabyReference(reg_digit0 + i,(Bufferadr+i),8);
+	}
+}
+
+void max7219ptrtest(void)
+{	
+	writeBufferbyReference(testbuffer);						
+							
+	/*
 	volatile bool *myptrarr[] = {&mybuffer[0],&mybuffer2[1],0,0,0,0,0,0};
 	// generate assignment of ptr
 	for (uint8_t i=2; i<8; i++)
@@ -99,4 +137,5 @@ void max7219ptrtest(void){
 	}
 	//shiftPointerArray(myptrarr,MSBFIRST)
 	writeRegisterbyReference(255,myptrarr);
+	*/
 }

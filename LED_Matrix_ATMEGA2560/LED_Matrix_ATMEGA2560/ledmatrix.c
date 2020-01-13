@@ -16,7 +16,7 @@
 #define NrRows(array)			(sizeof(array)/sizeof(array[0]))
 #define NrColumns(array)		(sizeof(array[0])/sizeof(array[0][0]))
 
-volatile bool buf[ROWLENGTH][COLLENGTH];
+bool buf[ROWLENGTH][COLLENGTH];
 
 // static void copyBuffer(bool _buffer[ROWLENGTH][COLLENGTH]){
 // 	for (uint8_t i=0; i<NrRows(buf); i++)
@@ -37,7 +37,7 @@ volatile bool buf[ROWLENGTH][COLLENGTH];
 // 	}
 // }
 
-void writeBuffer(volatile bool _buf[ROWLENGTH][COLLENGTH]){
+void writeBuffer(bool _buf[ROWLENGTH][COLLENGTH]){
 	volatile uint8_t bytetowrite;
 	for (uint8_t i=0; i<NRMAX; i++)
 	{

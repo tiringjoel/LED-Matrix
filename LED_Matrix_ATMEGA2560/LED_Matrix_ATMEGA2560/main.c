@@ -13,7 +13,7 @@
 #include "max7219ptr.h"
 
 
-bool mybuffer[ROWLENGTH][COLLENGTH];
+//bool mybuffer[ROWLENGTH][COLLENGTH];
 
 int main(void)
 {
