@@ -1,13 +1,16 @@
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-# define NrArrayItems(arr)		sizeof(arr)/sizeof(arr[0])
+#define NrArrayItems(array)		(sizeof(array)/sizeof(array[0]))
+#define NrRows(array)			(sizeof(array)/sizeof(array[0]))
+#define NrColumns(array)		(sizeof(array[0])/sizeof(array[0][0]))
 
-void printptrarr(uint8_t *ptr[])
+void printcolumn(uint8_t *ptr, uint8_t NrItems)
 {
-	for (uint8_t i = 0; i < NrArrayItems(ptr); i++)
+	for (uint8_t i = 0; i < NrItems; i++)
 	{
-		printf("Value of ptr[%d]: %d\n",i,*ptr[i]);
+		printf("Value of ptr + %d: %d\n",i,*(ptr+i));
 	}
 }
 
@@ -16,6 +19,10 @@ int main()
 	uint8_t testbuf[2][3] ={{1,2,3},
 							{4,5,6}};
 
-	uint8_t *mycolptr[] = {&testbuf[0][0],&testbuf[1][0]};
-	printptrarr(mycolptr);
+	uint8_t test[2][3][4] = {
+    {{3, 4, 2, 3}, {0, -3, 9, 11}, {23, 12, 23, 2}},
+    {{13, 4, 56, 3}, {5, 9, 3, 5}, {3, 1, 4, 9}}};
+
+	uint8_t *myptr = &test[0][0][0];
+	printcolumn(myptr, NrArrayItems(test));
 }

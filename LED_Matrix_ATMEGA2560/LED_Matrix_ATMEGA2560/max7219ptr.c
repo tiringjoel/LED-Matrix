@@ -39,15 +39,6 @@
 #define ROWLENGTH	(8)
 #define COLLENGTH	(8)
 
-bool testbuffer[8][8] = {	{false,true,false,true,false,true,false,true},
-							{true,false,true,false,true,false,true,false},
-							{false,true,false,true,false,true,false,true},
-							{true,false,true,false,true,false,true,false},
-							{false,true,false,true,false,true,false,true},
-							{true,false,true,false,true,false,true,false},
-							{false,true,false,true,false,true,false,true},
-							{true,false,true,false,true,false,true,false}	};
-				
 
 static void shiftByte(uint8_t byte, uint8_t lsbfirst)
 {
@@ -90,16 +81,16 @@ static void shiftPointerArray(bool **output, uint8_t lsbfirst)
 	}
 }
 */
-static void shiftPointerArray(bool *output[BYTE], uint8_t lsbfirst)
+static void shiftByteRef(bool *output, uint8_t lsbfirst)
 {
 	volatile bool command;
 	for (uint8_t i=0; i<BYTE; i++)
 	{
 		if (!lsbfirst)
 		{
-			command = *output[i];
+			command = *(output + i);
 			}else {
-			command = *output[BYTE-i];
+			command = *(output + (BYTE-i));
 		}
 		digitalWrite(MAXPORT,DATAPIN,command);
 		digitalWrite(MAXPORT,CLKPIN,TRUE);
@@ -122,12 +113,12 @@ static void writeRegisterbyReference(uint8_t address,bool **value)
 	latchData();
 }
 
-static void writeDatabyReference(uint8_t address ,bool **value, uint8_t NrBytes)
+static void writeDatabyReference(uint8_t address ,bool *value, uint8_t NrBytes)
 {
 	for (uint8_t i=0; i<NrBytes; i++)
 	{
 		shiftByte(address, MSBFIRST);
-		shiftPointerArray((value+8*i),LSBFIRST);
+		shiftByteRef((value+8*i),LSBFIRST);
 	}
 	latchData();
 }
@@ -135,30 +126,25 @@ static void writeDatabyReference(uint8_t address ,bool **value, uint8_t NrBytes)
 void writeBufferbyReference(bool buf[ROWLENGTH][COLLENGTH])
 {
 	//assign Array of Pointer to Bufferrows
-	bool *Bufferadr[ROWLENGTH];
-	for (uint8_t i=0; i<ROWLENGTH; i++)
-	{
-		Bufferadr[i] = &buf[i][0]; 
-	}
+	bool *wrptr;
  	//write Data iteratively to Register
  	for (uint8_t i=0; i<COLLENGTH; i++)
  	{
- 		writeDatabyReference((reg_digit0 + i),(Bufferadr+i),16);
+		wrptr = &buf[i][0];
+ 		writeDatabyReference((reg_digit0 + i),wrptr,1);
  	}
 }
 
 void max7219ptrtest(void)
 {	
-	//writeBufferbyReference(testbuffer);						
+	bool testbuffer[8][8] = {	{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false},
+							{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false},
+							{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false},
+							{false,true,false,true,false,true,false,true},
+							{true,false,true,false,true,false,true,false}	};
 							
-	
-	volatile bool *myptrarr[] = {&mybuffer[0],&mybuffer2[1],0,0,0,0,0,0};
-	// generate assignment of ptr
-	for (uint8_t i=2; i<8; i++)
-	{
-		myptrarr[i] = &mybuffer[i];
-	}
-	//shiftPointerArray(myptrarr,MSBFIRST)
-	writeRegisterbyReference(255,myptrarr);
-	
+	writeBufferbyReference(testbuffer);
 }

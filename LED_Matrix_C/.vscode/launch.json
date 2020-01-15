@@ -8,14 +8,14 @@
             "name": "(gdb) Starten",
             "type": "cppdbg",
             "request": "launch",
-            "program": "Programmnamen eingeben, z. B. \"${workspaceFolder}/a.exe\"",
+            "program": "${workspaceFolder}/a.out",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "/path/to/gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
                 {
                     "description": "Automatische Strukturierung und Einrückung für \"gdb\" aktivieren",
