@@ -1,8 +1,0 @@
-[DEFAULT]
-BASEURL=http://info.baeumle.com/ansic.html
-[DOC#14#16]
-BASEURL=http://info.baeumle.com/ansic/c05.html
-ORIGURL=ansic/c-main.html
-[InternetShortcut]
-URL=http://info.baeumle.com/ansic.html
-Modified=E02621B759BDC601BB
