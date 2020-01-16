@@ -10,18 +10,22 @@
 #include <stdbool.h>
 #include "max7219.h"
 #include "ledmatrix.h"
-#include "max7219ptr.h"
-
-
-//bool mybuffer[ROWLENGTH][COLLENGTH];
 
 int main(void)
 {
-	max7219ptrtest();
-	//initMax();
+	initMax();
+	bool buf[ROWLENGTH][COLLENGTH];
     while (1) 
     {
-		//testfncmatrix();
+		for (uint8_t j=0; j<32; j++)
+		{
+			for (uint8_t i=0; i<8; i++)
+			{
+				clearBuffer(buf);
+				buf[j][i] = true;
+				writeBuffer(buf);
+			}
+		}
     }
 }
 
