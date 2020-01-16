@@ -2,31 +2,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// Dimensions of the LED Matrix
 #define ROWLENGTH				(8)
 #define COLLENGTH				(32)
-#define NRMAX					(4)
 
 #define NrArrayItems(array)		(sizeof(array)/sizeof(array[0]))
 #define NrRows(array)			(sizeof(array)/sizeof(array[0]))
 #define NrColumns(array)		(sizeof(array[0])/sizeof(array[0][0]))
 
 uint8_t registers[8] = {0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8};
-
-/* write Functions for MAX7219 */
-void writeBit(uint8_t *value)
-{
-	
-}
-
-void writeRegister(uint8_t regindex)
-{
-
-}
-
-void LatchData(void)
-{
-
-}
 
 /* Print Functions for Terminal */
 void printByte(uint8_t *value)
@@ -72,26 +56,72 @@ void printLatch(void){
 	printf("Data latched from Shift Register\n");
 }
 
-void shiftBufferOut(uint8_t buffer[ROWLENGTH][COLLENGTH])
+void shiftBufferOut(uint8_t *rdptr)
 {	
-	uint8_t *rdptr = &buffer[ROWLENGTH-1][COLLENGTH-1];
 	uint8_t regcounter = 0;
-	for (uint8_t i = 0; i < (ROWLENGTH*COLLENGTH)-1; i++)
+	for (uint16_t i = 0; i < (ROWLENGTH*COLLENGTH); i++)
 	{
 		if (!(i%8))
 		{
 			printRegister(regcounter);
 		}
-		printByte(rdptr-i);
+		printByte(rdptr);
 		if (!((i+1)%32))
 		{
-
 			printLatch();
 			regcounter++;
 		}
-		
+		rdptr--;
 	}
-}	
+}
+
+void shiftBufferRight(uint8_t *rdptr)
+{
+	uint8_t regcounter = 0;
+	for (uint16_t i = 0; i < (ROWLENGTH*COLLENGTH); i++)
+	{
+		if (!(i%8))
+		{
+			printRegister(regcounter);
+		}
+		if (!((i+1)%32))
+		{
+			printByte(rdptr+31);
+		}else{
+			printByte(rdptr-1);
+		}
+		if (!((i+1)%32))
+		{
+			printLatch();
+			regcounter++;
+		}
+		rdptr--;
+	}
+}
+
+void shiftBufferLeft(uint8_t *rdptr)
+{
+	uint8_t regcounter = 0;
+	for (uint16_t i = 0; i < (ROWLENGTH*COLLENGTH); i++)
+	{
+		if (!(i%8))
+		{
+			printRegister(regcounter);
+		}
+		if (!(i%32))
+		{
+			printByte(rdptr-31);
+		}else{
+			printByte(rdptr+1);
+		}
+		if (!((i+1)%32))
+		{
+			printLatch();
+			regcounter++;
+		}
+		rdptr--;
+	}
+}
 
 int main()
 {	
@@ -99,9 +129,9 @@ int main()
 	uint8_t ledbuf[ROWLENGTH][COLLENGTH];
 	uint8_t counter = 0;
 
-	for (uint8_t i = 0; i < 8; i++)
+	for (uint8_t i = 0; i < ROWLENGTH; i++)
 	{
-		for (uint8_t j = 0; j < 32; j++)
+		for (uint8_t j = 0; j < COLLENGTH; j++)
 		{
 			ledbuf[i][j] = counter;
 			counter++;
@@ -109,9 +139,9 @@ int main()
 	}
 
 	uint8_t *ptr = &ledbuf[ROWLENGTH-1][COLLENGTH-1];
-	printf("Address pointer points to: %x\n",ptr);
-	printf("Value stored in this address: %d\n",*ptr);
 
-	shiftBufferOut(ledbuf);
+	shiftBufferOut(ptr);
+	shiftBufferRight(ptr);
+	shiftBufferLeft(ptr);
 	return 0;
 }
