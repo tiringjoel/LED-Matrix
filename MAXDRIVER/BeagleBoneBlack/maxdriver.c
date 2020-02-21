@@ -125,11 +125,11 @@ void shiftBufferOut(S_MAX * max, volatile uint8_t * rdptr)
 			shiftByte(max, registers[regcounter], MSBFIRST);
 		}
 		shiftBit(max, *(rdptr-i));
+		printf("Byte: %d\n",*(rdptr-i));
 		if (!((i+1)%32))
 		{
 			latchData(max);
 			regcounter++;
 		}
-		printf("Byte: %d\n",*(rdptr-i));
 	}
 }
