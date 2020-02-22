@@ -29,3 +29,16 @@ work
 resources
 *.idx
 *.vrb
+.spyproject
+.vscode
+mount
+__pycache__
+17-build/image
+images
+modules
+tc
+build
+target-mount
+target-root
+work
+resources
