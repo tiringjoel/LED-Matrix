@@ -21,3 +21,5 @@ modules
 images
 __pycache__
 mount
+
+.vscode
