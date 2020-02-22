@@ -1,0 +1,23 @@
+*.class
+*.o
+#--------------------- latex
+*.aux
+*.log
+*.out
+*.nav
+*.toc
+*.snm
+*.idx
+*.vrb
+
+resources
+work
+target-mount
+target-root
+tc
+build
+modules
+17-build/image
+images
+__pycache__
+mount
