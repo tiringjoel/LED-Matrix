@@ -14,9 +14,18 @@ resources
 *.snm
 *.nav
 *.toc
-*.out
-*.log
-*.aux
-#--------------------- latex
-*.o
-*.class
+*.snm
+.vscode
+mount
+__pycache__
+images
+17-build/image
+modules
+build
+tc
+target-mount
+target-root
+work
+resources
+*.idx
+*.vrb
