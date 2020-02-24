@@ -56,6 +56,7 @@ void clearDatabus(S_MAX * max){
 }
 
 void latchData(S_MAX * max){
+	printf("latchData called...\n");
 	// digitalWrite(*(max->port),max->cspin,TRUE);
 	// _delay_us(0.05);
 	// digitalWrite(*(max->port),max->cspin,FALSE);
