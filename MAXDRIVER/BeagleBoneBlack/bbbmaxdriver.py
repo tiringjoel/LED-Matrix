@@ -4,7 +4,7 @@ import numpy.ctypeslib as npct
 import os
 
 maxdriverlib = cdll.LoadLibrary(os.path.abspath("maxdriver.so"))
-array_1d_uint8 = npct.ndpointer(dtype=np.uint8, ndim=1, flags='CONTIGUOUS')
+array_1d_uint8 = npct.ndpointer(dtype=np.uint8, ndim=2, flags='CONTIGUOUS')
 
 def wrap_function(funcname, restype, argtypes):
     """Simplify wrapping ctypes functions"""
@@ -37,12 +37,3 @@ class MAX(Structure):
 
     def clearDisplay(self):
         self.clearDisplay_func(self)
-
-
-# # Example
-# print("----------------MAX1----------------")
-# mymax = MAX(10,20,35,4)
-# print("----------------MAX2----------------")
-# mymax2 = MAX(99,88,77,2)
-# x = np.arange(0,256,1,dtype = np.uint8)
-# mymax.shiftBufferOut(x)
