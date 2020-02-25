@@ -312,6 +312,8 @@ int iolib_free(void);
 int iolib_delay_ms(unsigned int msec);
 /* another delay routine */
 int BBBIO_sys_delay_ms(unsigned long msec);
+/* JWI: added delay_us to header */
+int BBBIO_sys_delay_us(unsigned long msec);
 
 /* set and get pin levels */
 void pin_high(char port, char pin);
