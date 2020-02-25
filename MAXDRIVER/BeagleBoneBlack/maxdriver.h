@@ -38,7 +38,7 @@
 #define MSBFIRST	(!LSBFIRST)
 
 typedef struct MAX{
-	// volatile uint8_t * port;
+	uint8_t connector;
 	uint8_t clkpin;
 	uint8_t cspin;
 	uint8_t datapin;
@@ -52,7 +52,7 @@ void clearDatabus(S_MAX * max);
 void latchData(S_MAX * max);
 void writeMax(S_MAX * max, uint8_t maxItem, uint8_t address, uint8_t value);
 void clearDisplay(S_MAX * max);
-void initMax(S_MAX * max, /*volatile uint8_t * port, */ uint8_t clkpin, uint8_t cspin, uint8_t datapin, uint8_t nrmax);
+void initMax(S_MAX * max, uint8_t connector, uint8_t clkpin, uint8_t cspin, uint8_t datapin, uint8_t nrmax);
 void shiftBufferOut(S_MAX * max, volatile uint8_t * rdptr);
 
 #endif /* MAXDRIVER_H_ */

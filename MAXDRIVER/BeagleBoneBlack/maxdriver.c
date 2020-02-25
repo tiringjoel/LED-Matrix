@@ -7,40 +7,40 @@
 
 #include <stdint.h>
 #include <stdio.h>
-// #include <avr/io.h>
-// #include <util/delay.h>
+#include "iobb/BBBio_lib/BBBiolib.h"
 #include "maxdriver.h"
 
-#define digitalWrite(port, bitnr, val)	{if (val) port |= 1<<bitnr; else port &= ~(1<<bitnr);}
+#define digitalWrite(connector, pin, val)		{if (val) pin_high(connector,pin); else pin_low(connector,pin);}
+#define delay									BBBIO_sys_delay_us(0.05);
 
 void shiftByte(S_MAX * max, uint8_t byte, uint8_t lsbfirst)
 {
- 	// volatile uint8_t command = FALSE;
-	// for (uint8_t i=0; i<8; i++)
-	// {
-	// 	if (lsbfirst)
-	// 	{
-	// 		command = byte & 0b00000001;
-	// 		byte = byte >> 1;
-	// 	}else {
-	// 		command = byte & 0b10000000;
-	// 		byte = byte << 1;
-	// 	}
-	// 	digitalWrite(*(max->port),max->datapin,command);
-	// 	digitalWrite(*(max->port),max->clkpin,TRUE);
-	// 	_delay_us(0.05);
-	// 	digitalWrite(*(max->port),max->clkpin,FALSE);
-	// 	_delay_us(0.05);
-	// } 
+ 	volatile uint8_t command = FALSE;
+	for (uint8_t i=0; i<8; i++)
+	{
+		if (lsbfirst)
+		{
+			command = byte & 0b00000001;
+			byte = byte >> 1;
+		}else {
+			command = byte & 0b10000000;
+			byte = byte << 1;
+		}
+		digitalWrite(max->connector,max->datapin,command);
+		digitalWrite(max->connector,max->clkpin,TRUE);
+		delay;
+		digitalWrite(max->connector,max->clkpin,FALSE);
+		delay;
+	} 
 }
 
 void shiftBit(S_MAX * max, volatile uint8_t bit)
 {
-	// digitalWrite(*(max->port),max->datapin,bit);
-	// digitalWrite(*(max->port),max->clkpin,TRUE);
-	// _delay_us(0.05);
-	// digitalWrite(*(max->port),max->clkpin,FALSE);
-	// _delay_us(0.05);
+	digitalWrite(max->connector,max->datapin,bit);
+	digitalWrite(max->connector,max->clkpin,TRUE);
+	delay
+	digitalWrite(max->connector,max->clkpin,FALSE);
+	delay
 }
 
 void shiftData(S_MAX * max, uint8_t address, uint8_t value){
@@ -56,10 +56,9 @@ void clearDatabus(S_MAX * max){
 }
 
 void latchData(S_MAX * max){
-	printf("latchData called...\n");
-	// digitalWrite(*(max->port),max->cspin,TRUE);
-	// _delay_us(0.05);
-	// digitalWrite(*(max->port),max->cspin,FALSE);
+	digitalWrite(max->connector,max->cspin,TRUE);
+	delay
+	digitalWrite(max->connector,max->cspin,FALSE);
 }
 
 void writeMax(S_MAX * max, uint8_t maxItem, uint8_t address, uint8_t value){
@@ -90,10 +89,10 @@ void clearDisplay(S_MAX * max)
 	}
 }
 
-void initMax(S_MAX * max, /*volatile uint8_t * port, */uint8_t clkpin, uint8_t cspin, uint8_t datapin, uint8_t nrmax)
+void initMax(S_MAX * max, uint8_t connector, uint8_t clkpin, uint8_t cspin, uint8_t datapin, uint8_t nrmax)
 {
 	printf("initMax called...\n");
-	// max->port = port;
+	max->connector = connector;
 	max->clkpin = clkpin;
 	max->cspin = cspin;
 	max->datapin = datapin;
