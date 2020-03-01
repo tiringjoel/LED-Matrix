@@ -3,10 +3,10 @@
 #(c) H.Buchmann FHNW 2018
 #we are in work
 #-----------------------
-VPATH=../src 
+VPATH=../../src 
 
-TARGET=${PWD}/../target-root/
-PREFIX=../tc/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+TARGET=${PWD}/../../target-root/
+PREFIX=../../tc/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 SYSROOT=${TARGET}
 CFLAGS=-std=c99  -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16 -D_POSIX_C_SOURCE=199309L -fpic
 CPPFLAGS=-I${TARGET}/usr/include/arm-linux-gnueabihf/
