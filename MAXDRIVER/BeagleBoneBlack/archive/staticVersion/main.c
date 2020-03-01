@@ -11,7 +11,7 @@ int main(void)
 {
 	printf("main routine started..\n");
 	initMax(&mymax, 8, 12, 13, 14, 4);
-	("Max intialized..");
+	("Max intialized..\n");
 	uint8_t connector = 8;
 	uint8_t pin = 12;
 	int del;
