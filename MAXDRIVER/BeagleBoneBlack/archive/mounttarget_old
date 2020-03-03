@@ -1,0 +1,15 @@
+#!/bin/bash
+
+mountpoint=${PWD}/..
+#ip=192.168.7.2
+#ip=192.168.43.32
+
+
+ip=10.207.3.73
+
+echo ${mountpoint}
+sshfs root@${ip}:/ ${mountpoint}/target-root
+
+sshfs root@${ip}:/home/debian/Desktop/work ${mountpoint}/work
+
+ssh root@${ip}
