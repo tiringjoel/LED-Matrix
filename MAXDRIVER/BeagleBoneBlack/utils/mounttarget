@@ -1,0 +1,24 @@
+#!/bin/bash
+
+mountpoint=${PWD}/..
+
+read -p 'Hostname: ' host
+echo "Checking avaliablity of ${host}"
+
+if ping -c 1 ${host} > /dev/null
+then
+	read -p 'Host avaliable, username: ' username
+	echo 'Mounting Host'
+	sshfs ${username}@${host}:/ ${mountpoint}/target-root
+	sshfs ${username}@${host}:/home/debian/Desktop/work ${mountpoint}/work
+	echo 'Mounted succesfully!'
+	ssh ${username}@${host}
+else
+	echo 'Host not reachable!'
+fi
+echo "Done!"
+
+
+
+
+
