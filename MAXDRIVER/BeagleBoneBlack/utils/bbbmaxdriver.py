@@ -1,9 +1,22 @@
-from ctypes as ct
+import ctypes as ct
 import numpy as np
 import numpy.ctypeslib as npct
 import os
 
-maxdriverlib = ct.cdll.LoadLibrary(os.path.abspath("libmaxdriver.so"))
+# Get library path
+suffix = "bin/libmaxdriver.so"
+libpath = os.path.join(os.path.dirname(os.getcwd()), suffix)
+
+#print(os.path.isfile(libpath))
+#libpath = os.path.abspath("libmaxdriver.so")
+#print(libpath)
+#maxdriverlib = ct.cdll.LoadLibrary(os.path.abspath("libmaxdriver.so"))
+
+try:
+    maxdriverlib = ct.cdll.LoadLibrary(libpath)
+except OSError:
+    print('cannot open', suffix)
+
 array_1d_uint8 = npct.ndpointer(dtype=np.uint8, ndim=2, flags='CONTIGUOUS')
 
 def wrap_function(funcname, restype, argtypes):

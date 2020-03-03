@@ -2,8 +2,13 @@ import ctypes
 import os
 import time
 
-print(os.path.abspath("libmaxdriver.so"))
-maxdriverlib = ctypes.cdll.LoadLibrary(os.path.abspath("libmaxdriver.so"))
+suffix = "bin/libmaxdriver.so"
+libpath = os.path.join(os.path.dirname(os.getcwd()), suffix)
+
+try:
+    maxdriverlib = ctypes.cdll.LoadLibrary(libpath)
+except OSError:
+    print('cannot open', suffix)
 
 def wrap_function(funcname, restype, argtypes):
     """Simplify wrapping ctypes functions"""
