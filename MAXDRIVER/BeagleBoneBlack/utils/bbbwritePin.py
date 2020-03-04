@@ -26,6 +26,8 @@ iolib_BBBIO_sys_delay_ms_func = wrap_function("BBBIO_sys_delay_ms",ctypes.c_int,
 iolib_BBBIO_sys_delay_us_func = wrap_function("BBBIO_sys_delay_us",ctypes.c_int,[ctypes.c_ulong])
 iolib_pin_high_func = wrap_function("pin_high",None,[ctypes.c_int,ctypes.c_int])
 iolib_pin_low_func = wrap_function("pin_low",None,[ctypes.c_int,ctypes.c_int])
+iolib_is_high_func = wrap_function("is_high",ctypes.c_int,[ctypes.c_int,ctypes.c_int])
+iolib_is_low_func = wrap_function("is_low",ctypes.c,[ctypes.c_int,ctypes.c_int])
 
 print("main routine started..")
 connector = 8
