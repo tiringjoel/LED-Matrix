@@ -3,20 +3,25 @@
 mountpoint=${PWD}/..
 
 read -p 'Hostname: ' host
-echo "Checking avaliablity of ${host}"
+printf "Checking avaliablity of ${host}\n"
 
-if ping -c 1 ${host} > /dev/null
-then
+if ping -c 1 ${host} > /dev/null; then
 	read -p 'Host avaliable, username: ' username
-	echo 'Mounting Host'
+	printf 'Mounting Host\n'
 	sshfs ${username}@${host}:/ ${mountpoint}/target-root
 	sshfs ${username}@${host}:/home/debian/Desktop/work ${mountpoint}/work
-	echo 'Mounted succesfully!'
-	ssh ${username}@${host}
+	printf 'Mounted succesfully, login (yes/no)? ' 
+	read input
+	if [ ${input} = "yes" ] || [ ${input} = "y" ]; then
+		echo "Logging in to ${host}"
+		ssh ${username}@${host}
+	else 
+		:
+	fi
 else
-	echo 'Host not reachable!'
+	printf 'Host not reachable!\n'
 fi
-echo "Done!"
+printf "Done!\n"
 
 
 
