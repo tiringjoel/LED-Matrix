@@ -3,8 +3,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 import os
 
-# To Do: 	declare PinState in class Pin private or make restype as fun variable
-#		Check for inputcondition in getPin_state
+# To Do		Catch invalid pin settings to avoid SegFault
 
 # Get library path
 suffix = "bin/libmaxdriver.so"
@@ -33,15 +32,17 @@ class Max(ct.Structure):
         ("nrmax",ct.c_uint8)
     ]
 
-    def __init__(self, clkpin, cspin, datapin, nrmax):
+    def __init__(self,connector, clkpin, cspin, datapin, nrmax):
+        self.connector = connector
         self.clkpin = clkpin
         self.cspin = cspin
         self.datapin = datapin
         self.nrmax = nrmax
-        self.initMax = wrap_function('initMax',None,[ct.Pointer(Max), ct.c_uint8, ct.c_uint8, ct.c_uint8, ct.c_uint8])
-        self.initMax(self,clkpin, cspin, datapin, nrmax)
-        self.shiftBufferOut_func = wrap_function('shiftBufferOut',None,[ct.Pointer(Max), array_1d_uint8])
-        self.clearDisplay_func = wrap_function('clearDisplay',None, [ct.Pointer(Max)])
+        self.initMax = wrap_function('initMax',None,[ct.POINTER(Max), ct.c_uint8, ct.c_uint8, ct.c_uint8, ct.c_uint8, ct.c_uint8])
+        self.initMax(self,connector, clkpin, cspin, datapin, nrmax)
+        self.shiftBufferOut_func = wrap_function('shiftBufferOut',None,[ct.POINTER(Max), array_1d_uint8])
+        self.clearDisplay_func = wrap_function('clearDisplay',None, [ct.POINTER(Max)])
+        self.iolib_free_func = wrap_function("iolib_free",ct.c_int,None)
 
     def shiftBufferOut(self, buffer):
         self.shiftBufferOut_func(self, buffer)
@@ -49,12 +50,14 @@ class Max(ct.Structure):
     def clearDisplay(self):
         self.clearDisplay_func(self)
 
+    def freePin(self):
+        self.iolib_free_func()
+
 class Pin:
     def __init__(self, connector, pin, output):
         self.connector = connector
         self.pin = pin
         self.output = output
-        self.PinState = 0
         # Load functions from dynamic library
         self.iolib_init_func = wrap_function("iolib_init",ct.c_int,None)
         self.iolib_setdir_func = wrap_function("iolib_setdir",ct.c_int,[ct.c_int,ct.c_int,ct.c_int])
@@ -82,23 +85,31 @@ class Pin:
 
     def setPin_state(self, state):
         if state != 0 or state == True:
-            setPin_high(self)
+            self.setPin_high()
+        elif state == 0 or state == False:
+            self.setPin_low() 
         else:
-            setPin_low(self)
+            print(state, 'is no valid argument')
 
     def getPin_state(self):
-        if self.iolib_is_high_func(self.connector, self.pin) == 1:
-            self.PinState == 1
-        elif self.iolib_is_low_func(self.connector, self.pin) == 1:
-            self.PinState == 0
+        if self.output == 1:
+            res = None
         else:
-            self.PinState == None
-        return self.PinState
+            if self.iolib_is_high_func(self.connector, self.pin) == 1:
+                res = True
+            elif self.iolib_is_low_func(self.connector, self.pin) == 1:
+                res = False
+            else:
+                res = None
+        return res
+
+    def getPin_direction(self):
+        return self.output
 
     def freePin(self):
         self.iolib_free_func()
 
- 
+
 # Delay functions       
 def delay_ms(ms):
     if ms > 999:
