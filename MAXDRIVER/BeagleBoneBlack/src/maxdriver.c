@@ -98,7 +98,7 @@ void initMax(S_MAX * max, uint8_t connector, uint8_t clkpin, uint8_t cspin, uint
 	max->cspin = cspin;
 	max->datapin = datapin;
 	max->nrmax = nrmax;
-	printf("CLKPIN: %d\n",max->connector);
+	printf("Connector: %d\n",max->connector);
 	printf("CLKPIN: %d\n",max->clkpin);
 	printf("CSPIN: %d\n",max->cspin);
 	printf("DATAPIN: %d\n",max->datapin);
@@ -112,8 +112,8 @@ void initMax(S_MAX * max, uint8_t connector, uint8_t clkpin, uint8_t cspin, uint
 	printf("Direction set...\n");
 	
 	// Test for library
-	pin_high(8,12);
-	printf("Pin set high accomplished!");
+	// pin_high(8,12);
+	// printf("Pin set high accomplished!");
 
 	for (uint8_t i=0; i<NRMAX; i++)
 	{
