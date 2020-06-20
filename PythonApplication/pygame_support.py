@@ -14,7 +14,7 @@ import threading
 def initScreen():
     global grid,screen,rectsize
     pygame.init()
-    grid = Grid(8,16)
+    grid = Grid(8,32)
     rectsize = 25
     size = width, height = grid.getNrCols()*rectsize, grid.getNrRows()*rectsize
     screen = pygame.display.set_mode(size)
@@ -74,6 +74,9 @@ def main():
             mousePressed(pos)
     draw()
             
+if __name__ == '__main__':
+    import application
+    application.vp_start_gui()
         
 
         

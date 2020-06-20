@@ -10,6 +10,7 @@ import pygame_support
 import pygame
 import time
 import threading
+import uart
 
 try:
     import Tkinter as tk
@@ -98,13 +99,16 @@ def CloseRequest():
     destroy_window()
 
 def init(top, gui, *args, **kwargs):
-    global w, top_level, root, t1
+    global w, top_level, root, t1, t2
     w = gui
     top_level = top
     root = top
     pygame_support.init()
+    uart.init()
     t1 = threading.Thread(target=updateGrid)
     t1.start()
+    t2 = threading.Thread(target=shiftGridOut)
+    t2.start()
     w.LblScrollDirection.config(text='Right')
     
 def destroy_window():
@@ -112,6 +116,7 @@ def destroy_window():
     print("Destroying Window...")
     global top_level
     t1.join()
+    t2.join()
     top_level.destroy()
     top_level = None
     print("Window Destroyed")
@@ -121,12 +126,17 @@ def updateGrid():
         pygame_support.main()
         time.sleep(0.01)
         
+def shiftGridOut():
+    while pygame_support.IsPygameRunning():
+        uart.main()
+        time.sleep(0.5)
+        
 def testcallback():
     print("testcallback called...")
 
 if __name__ == '__main__':
-    import GUI_Listbox
-    GUI_Listbox.vp_start_gui()
+    import application
+    application.vp_start_gui()
 
 
 
