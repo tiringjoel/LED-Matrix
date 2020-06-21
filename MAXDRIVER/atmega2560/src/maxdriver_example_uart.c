@@ -14,9 +14,9 @@
 #include "usart.h"
 #include "maxdriver.h"
 
-#define CLKPIN					(0)
-#define CSPIN					(1)
-#define DATAPIN					(2)
+#define CLKPIN					(0)		// Pin 37
+#define CSPIN					(1)		// Pin 36
+#define DATAPIN					(2)		// Pin 35
 #define NRMAX					(4)
 #define ROWLENGTH				(8)
 #define COLLENGTH				(32)
@@ -31,8 +31,6 @@ void init_io(void){
 	
 	// init uart
 	uart_init(BAUD_CALC(9600));
-	stdout = &uart0_io;
-	stdin = &uart0_io;
 	sei();
 	uart_puts("hello from maxdriver\r\n");
 }
@@ -44,15 +42,11 @@ void fillBuffer(uint8_t* buf, uint8_t* data, uint8_t* position)
 		*(buf + *(position) + i) = *data & (1<<i);
 	}
 	*(position) += 8;
-	uart_puts("Position: ");
-	uart_putint(*(position));
-	uart_puts("\r\n");
 }
 
 int main(void)
 {
 	init_io();
-	
 	uint8_t ledbuf[ROWLENGTH][COLLENGTH];
 	uint8_t data = 0;
 	uint8_t writepos = 0;
@@ -69,12 +63,9 @@ int main(void)
 		if (uart_AvailableBytes())
 		{
 			data = uart_getint();
-			uart_putint(data);
-			uart_puts("\r\n");
 			fillBuffer(&ledbuf[0][0],&data,&writepos);
-			shiftBufferOut(&mymax,&ledbuf[0][0]);
 		}
-		_delay_ms(250);
+		shiftBufferOut(&mymax,&ledbuf[0][0]);
 	}
 }
 

@@ -8,7 +8,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "maxdriver.h"
-#include "printMAX.h"
 
 #define MAXPORT					PORTC
 #define CLKPIN					(0)		// Pin 37
