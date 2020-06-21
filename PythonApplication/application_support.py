@@ -114,6 +114,7 @@ def init(top, gui, *args, **kwargs):
 def destroy_window():
     # Function which closes the window.
     print("Destroying Window...")
+    uart.close()
     global top_level
     t1.join()
     t2.join()
@@ -129,7 +130,7 @@ def updateGrid():
 def shiftGridOut():
     while pygame_support.IsPygameRunning():
         uart.main()
-        time.sleep(0.5)
+        time.sleep(0.05)
         
 def testcallback():
     print("testcallback called...")

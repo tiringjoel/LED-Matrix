@@ -65,7 +65,7 @@ class Grid:
                 if self.wiperpos > 0:    
                         self.data[:,(self.wiperpos-1)] = 0
                 self.wiperpos += 1
-                time.sleep(0.025)
+                time.sleep(0.05)
                 wiping()
             else:
                 self.wiperpos = 0
@@ -123,4 +123,8 @@ class Grid:
             return True
         else:
             return False
+
+if __name__ == '__main__':
+    import application
+    application.vp_start_gui()
 
