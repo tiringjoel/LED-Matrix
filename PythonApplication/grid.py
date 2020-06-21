@@ -65,7 +65,7 @@ class Grid:
                 if self.wiperpos > 0:    
                         self.data[:,(self.wiperpos-1)] = 0
                 self.wiperpos += 1
-                time.sleep(0.05)
+                time.sleep(0.025)
                 wiping()
             else:
                 self.wiperpos = 0

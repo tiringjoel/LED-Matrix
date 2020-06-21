@@ -21,6 +21,7 @@
 #define ROWLENGTH				(8)
 #define COLLENGTH				(32)
 #define BUFF_SIZE				(25)
+#define BAUDRATE				(19200)
 
 S_MAX mymax;
 
@@ -30,7 +31,7 @@ void init_io(void){
 	initMax(&mymax,&PORTC,CLKPIN,CSPIN,DATAPIN,NRMAX);
 	
 	// init uart
-	uart_init(BAUD_CALC(9600));
+	uart_init(BAUD_CALC(BAUDRATE));
 	sei();
 	uart_puts("hello from maxdriver\r\n");
 }
@@ -65,7 +66,10 @@ int main(void)
 			data = uart_getint();
 			fillBuffer(&ledbuf[0][0],&data,&writepos);
 		}
-		shiftBufferOut(&mymax,&ledbuf[0][0]);
+		if (!writepos)
+		{
+			shiftBufferOut(&mymax,&ledbuf[0][0]);
+		}
 	}
 }
 

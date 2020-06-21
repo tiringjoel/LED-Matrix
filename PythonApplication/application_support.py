@@ -125,12 +125,12 @@ def destroy_window():
 def updateGrid():
     while pygame_support.IsPygameRunning():
         pygame_support.main()
-        time.sleep(0.01)
+        time.sleep(0.05)
         
 def shiftGridOut():
     while pygame_support.IsPygameRunning():
         uart.main()
-        time.sleep(0.05)
+        time.sleep(0.005)
         
 def testcallback():
     print("testcallback called...")

@@ -12,7 +12,7 @@ import time
 def init():
     global ser
     try:
-        ser = serial.Serial('COM5',9600)
+        ser = serial.Serial('COM5',19200)
         time.sleep(1.5)
         return 1
     except:
