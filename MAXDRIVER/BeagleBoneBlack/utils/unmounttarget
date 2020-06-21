@@ -1,0 +1,27 @@
+#!/bin/bash
+
+mountpoint=${PWD}/..
+
+
+
+if mountpoint -q ${mountpoint}/work/ > /dev/null 
+then
+	echo 'Unmounting work'
+	fusermount -u ${mountpoint}/work/
+else
+	echo 'work is not a mountpont'
+fi
+
+if mountpoint -q ${mountpoint}/target-root/ > /dev/null
+then
+	echo 'Unmounting target-root'
+	fusermount -u ${mountpoint}/target-root/
+else
+	echo 'target-root is not a mountpoint'
+fi
+echo "Done!"
+
+
+
+
+
